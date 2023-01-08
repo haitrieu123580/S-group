@@ -36,7 +36,7 @@ function addNote() {
     notes.innerHTML += `
     <div class="note__item">
     <div class="item__head">
-        <button id="save" onclick="saveNote(${newIndex})"><i class="fas fa-edit"></i></button>
+        <button id="save" onclick="saveNote(${newIndex+1})"><i class="fas fa-edit"></i></button>
         <button id="delete" onclick="deleteNote(${newIndex})">
             <i class="fas fa-trash-alt"></i>
         </button>
@@ -47,25 +47,12 @@ function addNote() {
 </div>
     `;
     let newNote ={
-        id:newIndex,
+        id:newIndex+1,
         content:""
     }
-    notesObj.push(newNote)
-    // const node = document.createElement("div");
-    // const textNode = document.createTextNode(`
-    // <div class="note__item">
-    //             <div class="item__head">
-    //                 <button id="edit"><i class="fas fa-edit"></i></button>
-    //                 <button id="delete" onclick="deleteNote(this)">
-    //                     <i class="fas fa-trash-alt"></i>
-    //                 </button>
-    //             </div>
-    //             <div class="item__body">
-    //                 <textarea></textarea>
-    //             </div>`)
-    // node.appendChild(textNode);
-    // document.getElementsByClassName("note__list")[0].appendChild(node);
-    console.log("btn Add")
+    notesObj.push(newNote);
+    document.querySelectorAll(".note__item").forEach(e => e.parentNode.removeChild(e));;
+    showNote();
 }
 
 function deleteNote(noteId) {
@@ -74,6 +61,8 @@ function deleteNote(noteId) {
     for (let i of notesObj) {
         if (i.id == noteId) {
             noteDel = i;
+            console.log(noteId);
+            console.log(noteDel);
         }
     }
     let index = notesObj.indexOf(noteDel);
@@ -87,14 +76,16 @@ function deleteNote(noteId) {
 
 function saveNote(noteId){
     //get textarea content 
-    let noteContent;
+//    find index of note    
     // update and save new content
-    
-    let noteUpdate;
-    for (let i of notesObj) {
-        if (i.id == noteId) {
-            noteUpdate = i;
+    let index;
+    for (var i = 0; i<notesObj.length;i++) {
+        if (notesObj[i].id==noteId) {
+           index = i;
+           console.log(index);
+          break;
         }
     }
-    noteUpdate.content = noteContent;
+    notesObj[index].content =document.querySelectorAll(".item__body textarea")[index].value;
+    console.log(notesObj[index]);
 }
