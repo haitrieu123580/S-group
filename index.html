@@ -1,89 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- Coding By CodingNepal - youtube.com/codingnepal -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">  
+    <title>Notes App in JavaScript | CodingNepal</title>
+    <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>note</title>
-    <style>
-        *{
-            box-sizing: border-box;
-        }
-        body{
-            background-color: aqua;
-        }
-        .container{
-            position: relative;
-        }
-        .container #btnAdd{
-            position: absolute;
-            right: 0;
-            padding: 10px;
-        }
-        .note__list{
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .note__item{
-            width: 300px;
-            margin: 20px;
-        }
-        .item__head{
-            display: flex;
-            justify-content:end ;
-            width: 100%;
-            background-color: greenyellow;
-           
-        }
-
-        button{
-            margin: 5px 10px;
-            background-color: greenyellow;
-            border: none;
-            font-size: 16px;
-            color: white;
-        }
-
-        .item__body{
-            width: 100%;
-        }
-        .item__body textarea{
-            width: 100%;
-            min-height: 400px;;
-            border: none;
-        }
-    </style>
-    <script src="https://kit.fontawesome.com/682fa468d1.js" crossorigin="anonymous"></script>
+    <!-- Iconscout Link For Icons -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="./resource/css/note.css">
 </head>
-<body>
-    <div class="container">
-        <button id="btnAdd" onclick="addNote()">
-            <i class="fas fa-plus"></i> Add note</button>
-        <div class="note__list">
-            <!-- <div class="note__item">
-                <div class="item__head">
-                    <button id="edit"><i class="fas fa-edit"></i></button>
-                    <button id="delete" onclick="deleteNote(this)">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-                <div class="item__body">
-                    <textarea></textarea>
-                </div>
+  <body>
+    <div class="popup-box">
+      <div class="popup">
+        <div class="content">
+          <header>
+            <p></p>
+            <i class="uil uil-times"></i>
+          </header>
+          <form action="#">
+            <div class="row title">
+              <label>Title</label>
+              <input type="text" spellcheck="false">
             </div>
-            <div class="note__item">
-                <div class="item__head">
-                    <button id="edit"><i class="fas fa-edit"></i></button>
-                    <button id="delete" onclick="deleteNote(this)">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-                <div class="item__body">
-                    <textarea></textarea>
-                </div>
-            </div> -->
+            <div class="row description">
+              <label>Description</label>
+              <textarea spellcheck="false"></textarea>
+            </div>
+            <button></button>
+          </form>
         </div>
+      </div>
     </div>
-</body>
-<script src="./resource/Js/noteJs.js"></script>
+    <div class="wrapper">
+      
+    </div>
+    <div class="add-box">
+      <div class="icon"><i class="uil uil-plus"></i>Add note</div>
+     </div>
+    <script src="./resource/Js/noteJs.js"></script>
+    
+  </body>
 </html>

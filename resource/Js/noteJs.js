@@ -1,91 +1,103 @@
-const notesObj = [
-    {
-        id: 1,
-        content: "bla bla..."
-    },
-    {
-        id: 2,
-        content: "bla bla ...2"
-    }
-]
-function showNote() {
-    let notes = document.getElementsByClassName("note__list")[0];
-    for (let i of notesObj) {
-        notes.innerHTML += `
-        <div class="note__item">
-    <div class="item__head">
-        <button id="save" onclick="saveNote(${i.id})"><i class="fas fa-edit"></i></button>
-        <button id="delete" onclick="deleteNote(${i.id})">
-            <i class="fas fa-trash-alt"></i>
-        </button>
-    </div>
-    <div class="item__body">
-        <textarea>${i.content}</textarea>
-    </div>
-</div>
-        `;
-    }
+const addBox = document.querySelector(".add-box"),
+    popupBox = document.querySelector(".popup-box"),
+    popupTitle = popupBox.querySelector("header p"),
+    closeIcon = popupBox.querySelector("header i"),
+    titleTag = popupBox.querySelector("input"),
+    descTag = popupBox.querySelector("textarea"),
+    addBtn = popupBox.querySelector("button");
+
+const months = ["January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December"];
+const notes = JSON.parse(localStorage.getItem("notes") || "[]");
+let isUpdate = false, updateId;
+
+addBox.addEventListener("click", () => {
+    popupTitle.innerText = "Add a new Note";
+    addBtn.innerText = "Add Note";
+    popupBox.classList.add("show");
+    document.querySelector("body").style.overflow = "hidden";
+    if (window.innerWidth > 660) titleTag.focus();
+});
+
+closeIcon.addEventListener("click", () => {
+    isUpdate = false;
+    titleTag.value = descTag.value = "";
+    popupBox.classList.remove("show");
+    document.querySelector("body").style.overflow = "auto";
+});
+
+function showNotes() {
+    if (!notes) return;
+    document.querySelectorAll(".note").forEach(li => li.remove());
+    notes.forEach((note, id) => {
+        let filterDesc = note.description.replaceAll("\n", '<br/>');
+        let liTag = `<li class="note">
+       
+       
+        <ul class="menu">
+            <li onclick="updateNote(${id}, '${note.title}', '${filterDesc}')"><i class="uil uil-pen"></i></li>
+            <li onclick="deleteNote(${id})"><i class="uil uil-trash"></i></li>
+        </ul>
+
+                        <div class="details">
+                            <p>${note.title}</p>
+                            <span>${filterDesc}</span>
+                        </div>
+        
+                    </li>`;
+        addBox.insertAdjacentHTML("afterend", liTag);
+    });
 }
+showNotes();
 
-showNote();
-
-
-function addNote() {
-    let notes = document.getElementsByClassName("note__list")[0];
-    let newIndex = notesObj.length;
-    notes.innerHTML += `
-    <div class="note__item">
-    <div class="item__head">
-        <button id="save" onclick="saveNote(${newIndex+1})"><i class="fas fa-edit"></i></button>
-        <button id="delete" onclick="deleteNote(${newIndex})">
-            <i class="fas fa-trash-alt"></i>
-        </button>
-    </div>
-    <div class="item__body">
-        <textarea></textarea>
-    </div>
-</div>
-    `;
-    let newNote ={
-        id:newIndex+1,
-        content:""
-    }
-    notesObj.push(newNote);
-    document.querySelectorAll(".note__item").forEach(e => e.parentNode.removeChild(e));;
-    showNote();
+function showMenu(elem) {
+    elem.parentElement.classList.add("show");
+    document.addEventListener("click", e => {
+        if (e.target.tagName != "I" || e.target != elem) {
+            elem.parentElement.classList.remove("show");
+        }
+    });
 }
 
 function deleteNote(noteId) {
-    // let noteDel = notes.indexOf(noteId);
-    let noteDel;
-    for (let i of notesObj) {
-        if (i.id == noteId) {
-            noteDel = i;
-            console.log(noteId);
-            console.log(noteDel);
-        }
-    }
-    let index = notesObj.indexOf(noteDel);
-    if (index > -1) { // only splice array when item is found
-        notesObj.splice(index, 1); // 2nd parameter means remove one item only
-    }
-    document.querySelectorAll(".note__item").forEach(e => e.parentNode.removeChild(e));;
-    showNote();
-
+    let confirmDel = confirm("Are you sure you want to delete this note?");
+    if (!confirmDel) return;
+    notes.splice(noteId, 1);
+    localStorage.setItem("notes", JSON.stringify(notes));
+    showNotes();
 }
 
-function saveNote(noteId){
-    //get textarea content 
-//    find index of note    
-    // update and save new content
-    let index;
-    for (var i = 0; i<notesObj.length;i++) {
-        if (notesObj[i].id==noteId) {
-           index = i;
-           console.log(index);
-          break;
-        }
-    }
-    notesObj[index].content =document.querySelectorAll(".item__body textarea")[index].value;
-    console.log(notesObj[index]);
+function updateNote(noteId, title, filterDesc) {
+    let description = filterDesc.replaceAll('<br/>', '\r\n');
+    updateId = noteId;
+    isUpdate = true;
+    addBox.click();
+    titleTag.value = title;
+    descTag.value = description;
+    popupTitle.innerText = "Update a Note";
+    addBtn.innerText = "Update Note";
 }
+
+addBtn.addEventListener("click", e => {
+    e.preventDefault();
+    let title = titleTag.value.trim(),
+        description = descTag.value.trim();
+
+    if (title || description) {
+        let currentDate = new Date(),
+            month = months[currentDate.getMonth()],
+            day = currentDate.getDate(),
+            year = currentDate.getFullYear();
+
+        let noteInfo = { title, description, date: `${month} ${day}, ${year}` }
+        if (!isUpdate) {
+            notes.push(noteInfo);
+        } else {
+            isUpdate = false;
+            notes[updateId] = noteInfo;
+        }
+        localStorage.setItem("notes", JSON.stringify(notes));
+        showNotes();
+        closeIcon.click();
+    }
+});
